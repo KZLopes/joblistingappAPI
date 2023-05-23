@@ -18,9 +18,11 @@ import java.util.List;
 @Component
 public class SearchRepositoryImpl implements SearchRepository{
 
+    @Value("${spring.data.mongodb.database}")
+    private String dbName;
+
     @Autowired
     MongoClient client;
-
     @Autowired
     MongoConverter converter;
 
@@ -29,7 +31,7 @@ public class SearchRepositoryImpl implements SearchRepository{
 
         final List<Post> posts = new ArrayList<>();
 
-        MongoDatabase database = client.getDatabase("JobListingApp");
+        MongoDatabase database = client.getDatabase(dbName);
         MongoCollection<Document> collection = database.getCollection("JobPosts");
 
         AggregateIterable<Document> result = collection.aggregate(Arrays.asList(new Document("$search",
